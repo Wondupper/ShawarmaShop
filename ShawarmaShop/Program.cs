@@ -11,6 +11,5 @@ builder.Services.AddSingleton<CustomerViewModel>();
 builder.Services.AddSingleton<SellerViewModel>();
 builder.Services.AddSingleton<ShawarmaViewModel>();
 builder.Services.AddSingleton<OrderViewModel>();
-//builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
 await builder.Build().RunAsync();

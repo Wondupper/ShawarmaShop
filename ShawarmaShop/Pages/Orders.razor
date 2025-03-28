@@ -34,19 +34,12 @@
             </div>
             <div class="form-group">
                 <label>Шаурма</label>
-                <div>
+                <InputSelect @bind-Value="newOrder.ShawarmaId" class="form-control">
                     @foreach (var shawarma in ShawarmaVM.Shawarmas)
                     {
-                        <div class="form-check">
-                            <InputCheckbox @bind-Value="@selectedShawarmas[shawarma.Id]"
-                                           class="form-check-input"
-                                           id="@shawarma.Id" />
-                            <label class="form-check-label" for="@shawarma.Id">
-                                @shawarma.Name (@shawarma.Price руб.)
-                            </label>
-                        </div>
+                        <option value="@shawarma.Id">@shawarma.Name</option>
                     }
-                </div>
+                </InputSelect>
             </div>
             <button type="submit" class="btn btn-primary">Создать заказ</button>
         </EditForm>
@@ -57,8 +50,7 @@
                 <tr>
                     <th>Покупатель</th>
                     <th>Продавец</th>
-                    <th>Сумма</th>
-                    <th>Дата</th>
+                    <th>Шаурма</th>
                     <th>Действия</th>
                 </tr>
             </thead>
@@ -68,8 +60,7 @@
                     <tr>
                         <td>@(CustomerVM.Customers.FirstOrDefault(c => c.Id == order.CustomerId)?.Name)</td>
                         <td>@(SellerVM.Sellers.FirstOrDefault(s => s.Id == order.SellerId)?.Name)</td>
-                        <td>@order.TotalPrice</td>
-                        <td>@order.OrderDate</td>
+                        <td>@(ShawarmaVM.Shawarmas.FirstOrDefault(s => s.Id == order.ShawarmaId)?.Name)</td>
                         <td>
                             <button @onclick="() => DeleteOrder(order.Id)" class="btn btn-danger btn-sm">Удалить</button>
                         </td>
@@ -82,31 +73,12 @@
 
 @code {
     private Order newOrder = new Order();
-    private Dictionary<Guid, bool> selectedShawarmas = new Dictionary<Guid, bool>();
-
-    protected override void OnInitialized()
-    {
-        foreach (var shawarma in ShawarmaVM.Shawarmas)
-        {
-            selectedShawarmas[shawarma.Id] = false;
-        }
-    }
 
     private void AddOrder()
     {
-        newOrder.ShawarmaIds = selectedShawarmas
-            .Where(s => s.Value)
-            .Select(s => s.Key)
-            .ToList();
-
-        newOrder.TotalPrice = OrderVM.CalculateOrderTotalPrice(newOrder, ShawarmaVM.Shawarmas.ToList());
         OrderVM.AddOrder(newOrder);
 
         newOrder = new Order();
-        foreach (var key in selectedShawarmas.Keys.ToList())
-        {
-            selectedShawarmas[key] = false;
-        }
     }
 
     private void DeleteOrder(Guid orderId)

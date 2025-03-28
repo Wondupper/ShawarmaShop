@@ -195,14 +195,6 @@ namespace ShawarmaShop.ViewModels
             }
         }
 
-        public decimal CalculateOrderTotalPrice(Order order, List<Shawarma> shawarmas)
-        {
-            return order.ShawarmaIds
-                .Select(id => shawarmas.FirstOrDefault(s => s.Id == id))
-                .Where(s => s != null)
-                .Sum(s => s.Price);
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
